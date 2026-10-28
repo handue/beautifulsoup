@@ -33,6 +33,7 @@ __all__ = [
     "Tag",
     "TemplateString",
     "ElementFilter",
+    "SoupReplacer",
     "UnicodeDammit",
     "CData",
     "Doctype",
@@ -87,6 +88,7 @@ from .element import (
     Tag,
     TemplateString,
 )
+from .replacer import SoupReplacer
 from .formatter import Formatter
 from .filter import (
     ElementFilter,
@@ -180,6 +182,7 @@ class BeautifulSoup(Tag):
     is_xml: bool
     known_xml: Optional[bool]
     parse_only: Optional[SoupStrainer]  #: :meta private:
+    replacer: Optional[SoupReplacer]  #: :meta private:
 
     # These members are only used while parsing markup.
     markup: Optional[_RawMarkup]  #: :meta private:
@@ -215,6 +218,7 @@ class BeautifulSoup(Tag):
         from_encoding: Optional[_Encoding] = None,
         exclude_encodings: Optional[_Encodings] = None,
         element_classes: Optional[Dict[Type[PageElement], Type[PageElement]]] = None,
+        replacer: Optional[SoupReplacer] = None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -254,6 +258,10 @@ class BeautifulSoup(Tag):
          like to be instantiated instead as the parse tree is
          built. This is useful for subclassing Tag or NavigableString
          to modify default behavior.
+
+        :param replacer: A SoupReplacer that renames tags as they are closed
+         during parsing. Supported by html.parser and lxml builders. Filtering
+         and parser behavior use the original names, before replacement.
 
         :param kwargs: For backwards compatibility purposes, the
          constructor accepts certain keyword arguments used in
@@ -341,6 +349,9 @@ class BeautifulSoup(Tag):
             )
             from_encoding = None
 
+        if replacer is not None and not isinstance(replacer, SoupReplacer):
+            raise TypeError("replacer must be a SoupReplacer or None.")
+        self.replacer = replacer
         self.element_classes = element_classes or dict()
 
         # We need this information to track whether or not the builder
@@ -434,6 +445,8 @@ class BeautifulSoup(Tag):
         self.is_xml = builder.is_xml
         self.known_xml = self.is_xml
         self._namespaces = dict()
+        if replacer is not None and builder.NAME == "html5lib":
+            raise NotImplementedError("SoupReplacer does not support the html5lib builder.")
         self.parse_only = parse_only
 
         if hasattr(markup, "read"):  # It's a file-type object.
@@ -801,6 +814,10 @@ class BeautifulSoup(Tag):
             self.preserve_whitespace_tag_stack.pop()
         if self.string_container_stack and tag == self.string_container_stack[-1]:
             self.string_container_stack.pop()
+        # Keep original names until parser bookkeeping and end-tag matching finish.
+        if self.replacer is not None and tag is not self:
+            if tag.name == self.replacer.og_tag:
+                tag.name = self.replacer.alt_tag
         # print("Pop", tag.name)
         if self.tagStack:
             self.currentTag = self.tagStack[-1]

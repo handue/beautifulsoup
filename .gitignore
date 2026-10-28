@@ -122,3 +122,8 @@ dmypy.json
 # Emacs files
 *~
 \#*\#
+
+# Local Milestone 2 environment and generated files
+.python/
+apps/m2/work/
+apps/m2/outputs/

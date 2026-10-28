@@ -80,6 +80,7 @@ include = [
     "/NEWS.txt",
 
     # Scripts.
+    "/build.sh",
     "/test-all-versions",
     "/scripts/*.py",
 

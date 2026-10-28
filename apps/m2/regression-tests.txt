@@ -1,0 +1,148 @@
+........................................................................ [  8%]
+........................................................................ [ 17%]
+........................................................................ [ 25%]
+............FF.........sssssss.......................................... [ 34%]
+........................................................................ [ 42%]
+............................................F........................... [ 51%]
+.F..F..............................................F.................... [ 60%]
+........................................................................ [ 68%]
+........................................................................ [ 77%]
+........................................................................ [ 85%]
+........................................................................ [ 94%]
+..............................................                           [100%]
+=================================== FAILURES ===================================
+_ TestFuzz.test_rejected_markup[clusterfuzz-testcase-minimized-bs4_fuzzer-5703933063462912] _
+
+self = <bs4.tests.test_fuzz.TestFuzz object at 0x108c2ab30>
+filename = 'clusterfuzz-testcase-minimized-bs4_fuzzer-5703933063462912'
+
+    @pytest.mark.parametrize(
+        "filename",
+        [
+            "clusterfuzz-testcase-minimized-bs4_fuzzer-5703933063462912",
+            "crash-ffbdfa8a2b26f13537b68d3794b0478a4090ee4a",
+        ],
+    )
+    def test_rejected_markup(self, filename):
+        markup = self.__markup(filename)
+>       with pytest.raises(ParserRejectedMarkup):
+E       Failed: DID NOT RAISE ParserRejectedMarkup
+
+bs4/tests/test_fuzz.py:81: Failed
+_ TestFuzz.test_rejected_markup[crash-ffbdfa8a2b26f13537b68d3794b0478a4090ee4a] _
+
+self = <bs4.tests.test_fuzz.TestFuzz object at 0x108c2ad10>
+filename = 'crash-ffbdfa8a2b26f13537b68d3794b0478a4090ee4a'
+
+    @pytest.mark.parametrize(
+        "filename",
+        [
+            "clusterfuzz-testcase-minimized-bs4_fuzzer-5703933063462912",
+            "crash-ffbdfa8a2b26f13537b68d3794b0478a4090ee4a",
+        ],
+    )
+    def test_rejected_markup(self, filename):
+        markup = self.__markup(filename)
+>       with pytest.raises(ParserRejectedMarkup):
+E       Failed: DID NOT RAISE ParserRejectedMarkup
+
+bs4/tests/test_fuzz.py:81: Failed
+------------------------------ Captured log call -------------------------------
+WARNING  bs4.dammit:dammit.py:825 Some characters could not be decoded, and were replaced with REPLACEMENT CHARACTER.
+________________ TestHTMLParserTreeBuilder.test_rejected_input _________________
+
+self = <bs4.tests.test_htmlparser.TestHTMLParserTreeBuilder object at 0x108c9c3a0>
+
+    def test_rejected_input(self):
+        # Python's html.parser will occasionally reject markup,
+        # especially when there is a problem with the initial DOCTYPE
+        # declaration. Different versions of Python sound the alarm in
+        # different ways, but Beautiful Soup consistently raises
+        # errors as ParserRejectedMarkup exceptions.
+        bad_markup = [
+            # https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=28873
+            # https://github.com/guidovranken/python-library-fuzzers/blob/master/corp-html/519e5b4269a01185a0d5e76295251921da2f0700
+            # https://github.com/python/cpython/issues/81928
+            b"\n<![\xff\xfe\xfe\xcd\x00",
+            # https://github.com/guidovranken/python-library-fuzzers/blob/master/corp-html/de32aa55785be29bbc72a1a8e06b00611fb3d9f8
+            # https://github.com/python/cpython/issues/78661
+            #
+            b"<![n\x00",
+            b"<![UNKNOWN[]]>",
+        ]
+        for markup in bad_markup:
+>           with pytest.raises(ParserRejectedMarkup):
+E           Failed: DID NOT RAISE ParserRejectedMarkup
+
+bs4/tests/test_htmlparser.py:37: Failed
+_________________ TestLXMLTreeBuilder.test_real_xhtml_document _________________
+
+self = <bs4.tests.test_lxml.TestLXMLTreeBuilder object at 0x108cbd960>
+
+        def test_real_xhtml_document(self):
+            """A real XHTML document should come out more or less the same as it went in."""
+            markup = b"""<?xml version="1.0" encoding="utf-8"?>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head><title>Hello.</title></head>
+    <body>Goodbye.</body>
+    </html>"""
+            with warnings.catch_warnings(record=True) as w:
+                soup = self.soup(markup)
+>           assert soup.encode("utf-8").replace(b"\n", b"") == markup.replace(b"\n", b"")
+E           AssertionError
+
+bs4/tests/__init__.py:516: AssertionError
+_______________ TestLXMLTreeBuilder.test_processing_instruction ________________
+
+self = <bs4.tests.test_lxml.TestLXMLTreeBuilder object at 0x108cbc100>
+
+    def test_processing_instruction(self):
+        # We test both Unicode and bytestring to verify that
+        # process_markup correctly sets processing_instruction_class
+        # even when the markup is already Unicode and there is no
+        # need to process anything.
+        markup = """<?PITarget PIContent?>"""
+        soup = self.soup(markup)
+>       assert markup == soup.decode()
+E       AssertionError
+
+bs4/tests/__init__.py:558: AssertionError
+_________________ TestLXMLTreeBuilder.test_out_of_range_entity _________________
+
+self = <bs4.tests.test_lxml.TestLXMLTreeBuilder object at 0x108c2b5e0>
+
+    def test_out_of_range_entity(self):
+>       self.assert_soup("<p>foo&#10000000000000;bar</p>", "<p>foobar</p>")
+
+bs4/tests/test_lxml.py:33:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <bs4.tests.test_lxml.TestLXMLTreeBuilder object at 0x108c2b5e0>
+to_parse = '<p>foo&#10000000000000;bar</p>', compare_parsed_to = '<p>foobar</p>'
+
+    def assert_soup(
+        self, to_parse: _IncomingMarkup, compare_parsed_to: Optional[str] = None
+    ) -> None:
+        """Parse some markup using Beautiful Soup and verify that
+        the output markup is as expected.
+        """
+        builder = self.default_builder
+        obj = BeautifulSoup(to_parse, builder=builder)
+        if compare_parsed_to is None:
+            assert isinstance(to_parse, str)
+            compare_parsed_to = to_parse
+
+        # Verify that the documents come out the same.
+>       assert obj.decode() == self.document_for(compare_parsed_to)
+E       AssertionError
+
+bs4/tests/__init__.py:131: AssertionError
+=========================== short test summary info ============================
+FAILED bs4/tests/test_fuzz.py::TestFuzz::test_rejected_markup[clusterfuzz-testcase-minimized-bs4_fuzzer-5703933063462912]
+FAILED bs4/tests/test_fuzz.py::TestFuzz::test_rejected_markup[crash-ffbdfa8a2b26f13537b68d3794b0478a4090ee4a]
+FAILED bs4/tests/test_htmlparser.py::TestHTMLParserTreeBuilder::test_rejected_input
+FAILED bs4/tests/test_lxml.py::TestLXMLTreeBuilder::test_real_xhtml_document
+FAILED bs4/tests/test_lxml.py::TestLXMLTreeBuilder::test_processing_instruction
+FAILED bs4/tests/test_lxml.py::TestLXMLTreeBuilder::test_out_of_range_entity
+6 failed, 825 passed, 7 skipped in 0.54s

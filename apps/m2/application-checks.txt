@@ -1,0 +1,20 @@
+task-demo.html: task2: identical output; bytes=156; sha256=1a8c4dd149ea8952f8f1c52a58030e5bca2241d4f82866addb92aa4f54261c57
+task-demo.html: task3: identical output; bytes=3793; sha256=91e5ec7fe13418e7cb7806f50ec3081850424e033a72c1a4d3c5945995788b29
+task-demo.html: task4: identical output; bytes=1738; sha256=db0f0ff81f0ba502bb3401b0b0326823e7cb85165a75580609ec857f90dbff4b
+task-demo.html: task6: identical prettified output to M1 replacement
+xml-schema.xml: task2: identical output; bytes=1589; sha256=798fbe271ac1d733451811d2457509cb163284f980c53590a645093bb419f822
+xml-schema.xml: task3: identical output; bytes=46388; sha256=6e20b5558b807ab73c8bdf280b0cec6a4537e320500e1396d8d07142244f5a72
+xml-schema.xml: task4: identical output; bytes=2909; sha256=2f59022ca6c12fff62fa74279d22ac73c12bc233bd5452c6b9c9a5643b9f1694
+xml-schema.xml: task6: identical prettified output to M1 replacement
+large.html: task2: identical output; bytes=15154; sha256=ffe412d0830eb7892f4e6326aa85eb9b57ca4ddfa9c0c4ef7e5806f3cd03c14f
+large.html: task3: identical output; bytes=24231164; sha256=1eddbb35d7694e94e1dec803fce25f2db0f4ba36bc9fcd0be698da64ddafab7e
+large.html: task4: identical output; bytes=95952; sha256=a933d5c680d520b540afc39d90ad9011bc6b9f35327be3a33a95bae8b9824a48
+large.html: task6: identical prettified output to M1 replacement
+large.xml: task2: identical output; bytes=15154; sha256=ffe412d0830eb7892f4e6326aa85eb9b57ca4ddfa9c0c4ef7e5806f3cd03c14f
+large.xml: task3: identical output; bytes=24231164; sha256=1eddbb35d7694e94e1dec803fce25f2db0f4ba36bc9fcd0be698da64ddafab7e
+large.xml: task4: identical output; bytes=95952; sha256=a933d5c680d520b540afc39d90ad9011bc6b9f35327be3a33a95bae8b9824a48
+large.xml: task6: identical prettified output to M1 replacement
+html-standard.html: task2: identical output; bytes=6656057; sha256=42e801ba441f02190b0ac8b167e706c44e6bcb2f0ab864e0363a2632695feebc
+html-standard.html: task3: identical output; bytes=98795381; sha256=11539f303eec2108b8bcabc94280dda735b50e4abb5ef10fe8f4296d625efea6
+html-standard.html: task4: 71178 identical tag names/attributes; whitespace differs only in img-contain-size; bytes=9403466/9403464
+html-standard.html: task6: identical prettified output to M1 replacement
