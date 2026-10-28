@@ -1,0 +1,85 @@
+........................................................................ [  8%]
+........................................................................ [ 17%]
+........................................................................ [ 25%]
+............FF.........sssssss.......................................... [ 34%]
+........................................................................ [ 43%]
+............................................F........................... [ 51%]
+........................................................................ [ 60%]
+........................................................................ [ 68%]
+........................................................................ [ 77%]
+........................................................................ [ 86%]
+........................................................................ [ 94%]
+............................................                             [100%]
+=================================== FAILURES ===================================
+_ TestFuzz.test_rejected_markup[clusterfuzz-testcase-minimized-bs4_fuzzer-5703933063462912] _
+
+self = <bs4.tests.test_fuzz.TestFuzz object at 0x106e97ed0>
+filename = 'clusterfuzz-testcase-minimized-bs4_fuzzer-5703933063462912'
+
+    @pytest.mark.parametrize(
+        "filename",
+        [
+            "clusterfuzz-testcase-minimized-bs4_fuzzer-5703933063462912",
+            "crash-ffbdfa8a2b26f13537b68d3794b0478a4090ee4a",
+        ],
+    )
+    def test_rejected_markup(self, filename):
+        markup = self.__markup(filename)
+>       with pytest.raises(ParserRejectedMarkup):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'bs4.exceptions.ParserRejectedMarkup'>
+
+bs4/tests/test_fuzz.py:81: Failed
+_ TestFuzz.test_rejected_markup[crash-ffbdfa8a2b26f13537b68d3794b0478a4090ee4a] _
+
+self = <bs4.tests.test_fuzz.TestFuzz object at 0x1118a8190>
+filename = 'crash-ffbdfa8a2b26f13537b68d3794b0478a4090ee4a'
+
+    @pytest.mark.parametrize(
+        "filename",
+        [
+            "clusterfuzz-testcase-minimized-bs4_fuzzer-5703933063462912",
+            "crash-ffbdfa8a2b26f13537b68d3794b0478a4090ee4a",
+        ],
+    )
+    def test_rejected_markup(self, filename):
+        markup = self.__markup(filename)
+>       with pytest.raises(ParserRejectedMarkup):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'bs4.exceptions.ParserRejectedMarkup'>
+
+bs4/tests/test_fuzz.py:81: Failed
+------------------------------ Captured log call -------------------------------
+WARNING  bs4.dammit:dammit.py:825 Some characters could not be decoded, and were replaced with REPLACEMENT CHARACTER.
+________________ TestHTMLParserTreeBuilder.test_rejected_input _________________
+
+self = <bs4.tests.test_htmlparser.TestHTMLParserTreeBuilder object at 0x1118a8690>
+
+    def test_rejected_input(self):
+        # Python's html.parser will occasionally reject markup,
+        # especially when there is a problem with the initial DOCTYPE
+        # declaration. Different versions of Python sound the alarm in
+        # different ways, but Beautiful Soup consistently raises
+        # errors as ParserRejectedMarkup exceptions.
+        bad_markup = [
+            # https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=28873
+            # https://github.com/guidovranken/python-library-fuzzers/blob/master/corp-html/519e5b4269a01185a0d5e76295251921da2f0700
+            # https://github.com/python/cpython/issues/81928
+            b"\n<![\xff\xfe\xfe\xcd\x00",
+            # https://github.com/guidovranken/python-library-fuzzers/blob/master/corp-html/de32aa55785be29bbc72a1a8e06b00611fb3d9f8
+            # https://github.com/python/cpython/issues/78661
+            #
+            b"<![n\x00",
+            b"<![UNKNOWN[]]>",
+        ]
+        for markup in bad_markup:
+>           with pytest.raises(ParserRejectedMarkup):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'bs4.exceptions.ParserRejectedMarkup'>
+
+bs4/tests/test_htmlparser.py:37: Failed
+=========================== short test summary info ============================
+FAILED bs4/tests/test_fuzz.py::TestFuzz::test_rejected_markup[clusterfuzz-testcase-minimized-bs4_fuzzer-5703933063462912]
+FAILED bs4/tests/test_fuzz.py::TestFuzz::test_rejected_markup[crash-ffbdfa8a2b26f13537b68d3794b0478a4090ee4a]
+FAILED bs4/tests/test_htmlparser.py::TestHTMLParserTreeBuilder::test_rejected_input
+3 failed, 826 passed, 7 skipped in 5.33s
