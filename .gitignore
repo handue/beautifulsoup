@@ -127,3 +127,6 @@ dmypy.json
 .python/
 apps/m2/work/
 apps/m2/outputs/
+
+# Local Milestone 3 generated files
+apps/m3/outputs/

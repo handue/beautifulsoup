@@ -259,9 +259,10 @@ class BeautifulSoup(Tag):
          built. This is useful for subclassing Tag or NavigableString
          to modify default behavior.
 
-        :param replacer: A SoupReplacer that renames tags as they are closed
-         during parsing. Supported by html.parser and lxml builders. Filtering
-         and parser behavior use the original names, before replacement.
+        :param replacer: A SoupReplacer that renames tags or changes their
+         attributes as they are closed during parsing. Supported by html.parser
+         and lxml builders. Filtering and parser behavior use the original
+         names, before replacement.
 
         :param kwargs: For backwards compatibility purposes, the
          constructor accepts certain keyword arguments used in
@@ -816,8 +817,7 @@ class BeautifulSoup(Tag):
             self.string_container_stack.pop()
         # Keep original names until parser bookkeeping and end-tag matching finish.
         if self.replacer is not None and tag is not self:
-            if tag.name == self.replacer.og_tag:
-                tag.name = self.replacer.alt_tag
+            self.replacer.transform(tag)
         # print("Pop", tag.name)
         if self.tagStack:
             self.currentTag = self.tagStack[-1]
