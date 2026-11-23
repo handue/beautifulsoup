@@ -693,6 +693,16 @@ class BeautifulSoup(Tag):
         self._most_recent_element = None
         self.pushTag(self)
 
+    def __iter__(self) -> Iterator[PageElement]:
+        """Iterate over every node in the document, in document order.
+
+        Unlike `Tag.__iter__`, which only yields direct children, this
+        walks the whole tree (tags and strings, but not the BeautifulSoup
+        object itself). Nodes are produced one at a time by following
+        `next_element`; no list of nodes is built.
+        """
+        return self.descendants
+
     def new_tag(
         self,
         name: str,
